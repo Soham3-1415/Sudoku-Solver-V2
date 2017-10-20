@@ -31,4 +31,8 @@ public class NumberField extends JFXTextField {
 	public ArrayList<Integer> getPossibleValues() {
 		return possibleValues;
 	}
+	
+	public int getValue() {
+		return Integer.parseInt(getText());
+	}
 }
