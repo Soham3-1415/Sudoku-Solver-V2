@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.jfoenix.controls.JFXTextField;
 
 public class NumberField extends JFXTextField {
-	private ArrayList<Integer> possibleValues;
+	private ArrayList<Integer> possibleValues = new ArrayList<Integer>();
 
 	public NumberField() {
 		super();
@@ -17,7 +17,7 @@ public class NumberField extends JFXTextField {
 	
 	public NumberField(ArrayList<Integer> possibleValues) {
 		setPossibleValues(possibleValues);
-		}
+	}
 	
 	public NumberField(String text, ArrayList<Integer> possibleValues) {
 		this(text);
