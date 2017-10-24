@@ -37,4 +37,8 @@ public class NumberField extends JFXTextField {
 			return 0;
 		return Integer.parseInt(getText());
 	}
+	
+	public void setValue(int value) {
+		setText(Integer.toString(value));
+	}
 }
