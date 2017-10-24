@@ -105,11 +105,12 @@ public class Main extends Application {
 					field.setId("");
 			}
 		
+		//CLEAN UP AND REWRITE
 		for(int r = 0; r < numberFields.length;)
 			for(int c = 0; c < numberFields[r].length;) {
 				NumberField field = numberFields[r][c];
 				if(!field.getId().equals("original")) {
-					sudoku.setPossibleValues(r, c);
+					sudoku.setPossibleValues(r, c);				//Something? Logic Check
 					if(field.getPossibleValues().size() == 0)
 						if(c <= 0) {
 							r--;
