@@ -33,9 +33,12 @@ public class NumberField extends JFXTextField {
 	}
 	
 	public int getValue() {
-		if(getText().equals(""))
+		try {
+			return Integer.parseInt(getText());
+		}
+		catch(Exception e) {
 			return 0;
-		return Integer.parseInt(getText());
+		}
 	}
 	
 	public void setValue(int value) {
