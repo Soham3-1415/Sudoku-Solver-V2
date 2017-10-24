@@ -33,6 +33,8 @@ public class NumberField extends JFXTextField {
 	}
 	
 	public int getValue() {
+		if(getText().equals(""))
+			return 0;
 		return Integer.parseInt(getText());
 	}
 }
