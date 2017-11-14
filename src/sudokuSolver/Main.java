@@ -80,13 +80,16 @@ public class Main extends Application {
 	}
 	
 	private void numberFieldRegulation(ObservableValue<? extends String> observable, String oldValue, String newValue, NumberField numberField) {
-		System.out.println(newValue +"\n"+ oldValue+"\n");
-		if (newValue.matches("\\d") && newValue.indexOf("0") == -1)
+		//System.out.println(newValue +"\n"+ oldValue+"\n");
+		if (newValue.matches("\\d{1}") && newValue.indexOf("0") == -1) {
+			if(oldValue.matches("\\d{1}") && oldValue.indexOf("0") == -1)
+				return;
 	    	Platform.runLater(() -> {
 	    		numberField.setText(newValue);
 	    		numberField.positionCaret(numberField.getText().length());
 	    	});
-		else if (newValue.matches("\\d\\d") && newValue.indexOf("0") == -1)
+		}
+		else if (newValue.matches("\\d{2}") && newValue.indexOf("0") == -1)
 			Platform.runLater(() -> {
 				String digit = "";
 				if(newValue.indexOf(oldValue) == 0)
