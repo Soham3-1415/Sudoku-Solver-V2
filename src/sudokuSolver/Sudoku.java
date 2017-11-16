@@ -66,7 +66,7 @@ public class Sudoku {
 		int startColPos = ((section-1)%3)*3;
 		for(int r = startRowPos; r < startRowPos+3; r++)
 			for(int c = startColPos; c < startColPos+3; c++)
-				numberFieldsSection[r][c] = numberFields[r][c];
+				numberFieldsSection[r%3][c%3] = numberFields[r][c];
 		return numberFieldsSection;
 	}
 	
