@@ -19,6 +19,44 @@ public class Sudoku {
 		return possibleValues ;
 	}
 	
+	public boolean hasNextCell(int r, int c) {
+		r = getNextRValue(r,c);
+		c = getNextCValue(r,c);
+		if(r >= 0 && r < numberFields.length && c >= 0 && c < numberFields[r].length)
+			return true;
+		return false;
+	}
+	
+	public int getNextRValue(int r, int c) {
+		if(c == numberFields[r].length - 1)
+			return r+1;
+		return r;
+	}
+	
+	public int getNextCValue(int r, int c) {
+		if(c == numberFields[r].length - 1)
+			return 0;
+		return c+1;
+	}
+	
+	public boolean hasPreviousCell(int r, int c) {
+		if(r == 0 && c == 0)
+			return false;
+		return true;
+	}
+	
+	public int getPreviousRValue(int r, int c) {
+		if(c == 0)
+			return r-11;
+		return r;
+	}
+	
+	public int getPreviousCValue(int r, int c) {
+		if(c == 0)
+			return numberFields[r].length-1;
+		return c-1;
+	}
+	
 	public boolean isUsable (int value, int r, int c) {
 		if(isInRow(value, r))
 			return false;
