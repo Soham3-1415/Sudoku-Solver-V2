@@ -113,33 +113,47 @@ public class Main extends Application {
 			for(int c = 0; c < numberFields.length; c++) {
 				NumberField field = numberFields[r][c];
 				field.getPossibleValues().clear();
-				if(!field.getText().equals(""))
+				if(!field.getText().equals("")) {
 					field.setId("original");
+					int temp = field.getValue();
+					field.setText("");
+					if(!sudoku.isUsable(temp, r, c)) {
+						field.setText("" + temp);
+						System.out.println("The sudoku is unsolvable.");
+						return;
+					}
+					field.setText("" + temp);
+				}
 				else
 					field.setId("");
 			}
 		
-		//CLEAN UP AND REWRITE
 		for(int r = 0; r < numberFields.length;)
 			for(int c = 0; c < numberFields[r].length;) {
 				NumberField field = numberFields[r][c];
-				if(!field.getId().equals("original")) {
-					sudoku.setPossibleValues(r, c);				//Something? Logic Check
-					if(field.getPossibleValues().size() == 0)
-						if(c <= 0) {
-							r--;
-							c = numberFields[r].length-1; 			//replace with in bounds method check
+				if(!field.getId().equals("original")) { //Checks if cell is an inputed value
+					if(!field.isLocked()) { //Only sets the possible values if the field is not locked
+						sudoku.setPossibleValues(r, c);
+						field.setLocked(true);
+					}
+					if(field.getPossibleValues().size() == 0) { //Checks if there are no more possible values
+						if(sudoku.hasPreviousCell(r, c)) { //Checks if there is a previous cell
+							field.setLocked(false);
+							r = sudoku.getPreviousRValue(r, c);
+							c = sudoku.getPreviousCValue(r, c);
+							numberFields[r][c].getPossibleValues().remove(0); //Removes the invalid possible value
 						}
-						else
-							c--;
-					else {
-						field.setValue(field.getPossibleValues().get(0));
-						if(c >= numberFields[r].length - 1) {			//replace with in bounds method check
-							r++;
-							c = 0;
+						else { //If there is no previous cell
+							System.out.println("Failed to find results.");
+							return;
 						}
-						else
-							c++;
+					}
+					else { //If there is 1 or more possible values
+						field.setValue(field.getPossibleValues().get(0)); //Set the first value
+						if(sudoku.hasNextCell(r, c)) {
+							r = sudoku.getNextRValue(r, c);
+							c = sudoku.getNextCValue(r, c);
+						}
 					}
 			}
 		}
