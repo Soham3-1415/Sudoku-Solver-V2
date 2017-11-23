@@ -51,6 +51,9 @@ public class NumberField extends JFXTextField {
 	}
 	
 	public void setValue(int value) {
-		setText(Integer.toString(value));
+		if(value >= 1 && value <= 9)
+			setText(Integer.toString(value));
+		else
+			setText("");
 	}
 }
