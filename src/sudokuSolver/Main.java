@@ -28,6 +28,7 @@ import javafx.fxml.FXMLLoader;
 public class Main extends Application {
 	private NumberField[][] numberFields = new NumberField[9][9];
 	private Sudoku sudoku;
+	private final String originalString = "original";
 	
 	private Label titleLbl = new Label("Sudoku Solver V2");
 	private GridPane numberFieldGrid = new GridPane();
@@ -36,7 +37,7 @@ public class Main extends Application {
 	
 	@Override
 	public void start(Stage primaryStage) {
-		sudoku = new Sudoku(numberFields);
+		sudoku = new Sudoku(numberFields, originalString);
 		
 		for(int r = 0; r < 9; r++)
 			for(int c = 0; c < 9; c++)
@@ -110,11 +111,11 @@ public class Main extends Application {
 	private void solveBtnClick() {
 		//Might need to implement concurrency
 		for(int r = 0; r < numberFields.length; r++)
-			for(int c = 0; c < numberFields.length; c++) {
+			for(int c = 0; c < numberFields[r].length; c++) {
 				NumberField field = numberFields[r][c];
 				field.getPossibleValues().clear();
 				if(!field.getText().equals("")) {
-					field.setId("original");
+					field.setId(originalString);
 					int temp = field.getValue();
 					field.setText("");
 					if(!sudoku.isUsable(temp, r, c)) {
@@ -128,16 +129,17 @@ public class Main extends Application {
 					field.setId("");
 			}
 		
-		for(int r = 0; r < numberFields.length;)
-			for(int c = 0; c < numberFields[r].length;) {
+		for(int r = sudoku.getNextRValue(0, 0); r < numberFields.length;)
+			for(int c = sudoku.getNextCValue(0, 0); c < numberFields[r].length;) {
 				NumberField field = numberFields[r][c];
-				if(!field.getId().equals("original")) { //Checks if cell is an inputed value
+				if(!field.getId().equals(originalString)) { //Checks if cell is an inputed value
 					if(!field.isLocked()) { //Only sets the possible values if the field is not locked
 						sudoku.setPossibleValues(r, c);
 						field.setLocked(true);
 					}
 					if(field.getPossibleValues().size() == 0) { //Checks if there are no more possible values
 						if(sudoku.hasPreviousCell(r, c)) { //Checks if there is a previous cell
+							field.setText("");
 							field.setLocked(false);
 							r = sudoku.getPreviousRValue(r, c);
 							c = sudoku.getPreviousCValue(r, c);
