@@ -123,6 +123,7 @@ public class Main extends Application {
 					field.setText("");
 					if(!sudoku.isUsable(temp, r, c)) {
 						field.setText("" + temp);
+						sudoku.clearSudokuIds();
 						System.out.println("The sudoku is unsolvable.");
 						return;
 					}
@@ -164,10 +165,8 @@ public class Main extends Application {
 						if (sudoku.hasNextCell(r, c)) {
 							r = sudoku.getNextRValue(r, c);
 							c = sudoku.getNextCValue(r, c);
-							System.out.println(""+r + c);
 						} else {
 							loopExit = 1;
-							System.out.println("" + r + " " + c);
 						}
 					}
 				}
