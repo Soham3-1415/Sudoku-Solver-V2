@@ -26,43 +26,54 @@ public class Sudoku {
 			return false;
 		return true;
 	}
-	
+
+	private int[] traverseForward(int r, int c) {
+		int [] originalPosition = {r,c};
+		if(!isInBounds(r,c)) {
+			return originalPosition;
+		}
+		do {
+			c++;
+			if(c >= numberFields[r].length) {
+				r++;
+				c = 0;
+			}
+			System.out.println(java.util.Arrays.toString(originalPosition) + " " + java.util.Arrays.toString(new int[] {r,c}));
+			if(!isInBounds(r, c))
+				return originalPosition;
+		} while(numberFields[r][c].getId() == originalString);
+		return new int[]{r, c};
+	}
+
+	private int[] traverseBackward(int r, int c) {
+		int [] originalPosition = {r,c};
+		if(!isInBounds(r,c)) {
+			return originalPosition;
+		}
+		do {
+			c--;
+			if(c <= 0) {
+				r--;
+				c = numberFields[r].length-1;
+			}
+			if(!isInBounds(r, c))
+				return originalPosition;
+		} while(numberFields[r][c].getId() == originalString);
+		return new int[]{r, c};
+	}
+
 	public boolean hasNextCell(int r, int c) {
-		if(getNextRValue(r, c) == r && getNextCValue(r, c) == c)
-			return false;
+		if(getNextRValue(r, c) == r && getNextCValue(r, c) == c){
+			System.out.print(r + " " + c);return false;}
 		return true;
 	}
 	
 	public int getNextRValue(int r, int c) {
-		int originalR = r;
-		if(!isInBounds(r, c))
-			return originalR;
-		do {
-			c++;
-			if(c >= numberFields[r].length) {
-				r++;
-				c = 0;
-			}
-			if(!isInBounds(r, c))
-				return originalR;
-		} while(numberFields[r][c].getId() == originalString);
-		return r;
+		return traverseForward(r,c)[0];
 	}
 	
 	public int getNextCValue(int r, int c) {
-		int originalC = c;
-		if(!isInBounds(r, c))
-			return originalC;
-		do {
-			c++;
-			if(c >= numberFields[r].length) {
-				r++;
-				c = 0;
-			}
-			if(!isInBounds(r, c))
-				return originalC;
-		} while(numberFields[r][c].getId() == originalString);
-		return c;
+		return traverseForward(r,c)[1];
 	}
 	
 	public boolean hasPreviousCell(int r, int c) {
@@ -72,35 +83,11 @@ public class Sudoku {
 	}
 	
 	public int getPreviousRValue(int r, int c) {
-		int originalR = r;
-		if(!isInBounds(r, c))
-			return originalR;
-		do {
-			c--;
-			if(c <= 0) {
-				r--;
-				c = numberFields[r].length;
-			}
-			if(!isInBounds(r, c))
-				return originalR;
-		} while(numberFields[r][c].getId() == originalString);
-		return r;
+		return traverseBackward(r,c)[0];
 	}
 	
 	public int getPreviousCValue(int r, int c) {
-		int originalC = c;
-		if(!isInBounds(r, c))
-			return originalC;
-		do {
-			c--;
-			if(c <= 0) {
-				r--;
-				c = numberFields[r].length;
-			}
-			if(!isInBounds(r, c))
-				return originalC;
-		} while(numberFields[r][c].getId() == originalString);
-		return c;
+		return traverseBackward(r,c)[1];
 	}
 	
 	public boolean isUsable (int value, int r, int c) {
