@@ -38,7 +38,6 @@ public class Sudoku {
 				r++;
 				c = 0;
 			}
-			System.out.println(java.util.Arrays.toString(originalPosition) + " " + java.util.Arrays.toString(new int[] {r,c}));
 			if(!isInBounds(r, c))
 				return originalPosition;
 		} while(numberFields[r][c].getId() == originalString);
@@ -63,8 +62,7 @@ public class Sudoku {
 	}
 
 	public boolean hasNextCell(int r, int c) {
-		if(getNextRValue(r, c) == r && getNextCValue(r, c) == c){
-			System.out.print(r + " " + c);return false;}
+		if(getNextRValue(r, c) == r && getNextCValue(r, c) == c){return false;}
 		return true;
 	}
 	
@@ -144,7 +142,22 @@ public class Sudoku {
 	public int getSectionNumber(int r, int c) {
 		return (((r/3)*3)+1) + c/3;
 	}
-	
+
+	public void clearSudoku() {
+		for(NumberField[] fieldArray: numberFields)
+			for(NumberField field: fieldArray) {
+				field.setValue(0);
+				clearSudokuIds();
+			}
+	}
+
+	public void clearSudokuIds() {
+		for(NumberField[] fieldArray: numberFields)
+			for(NumberField field: fieldArray) {
+				field.setId("");
+			}
+	}
+
 	public String toString() {
 		String output = "";
 		for(NumberField[] row : numberFields) {
