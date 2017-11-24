@@ -109,6 +109,9 @@ public class Main extends Application {
 	}
 	
 	private void solveBtnClick() {
+		int r1 = 0;
+		int c1 = 0;
+
 		//Might need to implement concurrency
 		for(int r = 0; r < numberFields.length; r++)
 			for(int c = 0; c < numberFields[r].length; c++) {
@@ -128,36 +131,102 @@ public class Main extends Application {
 				else
 					field.setId("");
 			}
-		
-		for(int r = sudoku.getNextRValue(0, 0); r < numberFields.length;)
-			for(int c = sudoku.getNextCValue(0, 0); c < numberFields[r].length;) {
+
+		if(numberFields[0][0].getId().equals(originalString)) {
+			r1 = sudoku.getNextRValue(0,0);
+			c1 = sudoku.getNextCValue(0,0);
+		}
+
+		int loopExit = 0;
+		for(int r = r1; r < numberFields.length; r+=loopExit)
+			for (int c = c1; c < numberFields[r].length; c+=loopExit) {
+				int or = r;//DEBUG
+				int oc = c;//DEBUG
 				NumberField field = numberFields[r][c];
-				if(!field.getId().equals(originalString)) { //Checks if cell is an inputed value
-					if(!field.isLocked()) { //Only sets the possible values if the field is not locked
+				if (!field.getId().equals(originalString)) { //Checks if cell is an inputed value
+					if (!field.isLocked()) { //Only sets the possible values if the field is not locked
 						sudoku.setPossibleValues(r, c);
 						field.setLocked(true);
 					}
-					if(field.getPossibleValues().size() == 0) { //Checks if there are no more possible values
-						if(sudoku.hasPreviousCell(r, c)) { //Checks if there is a previous cell
+					if (field.getPossibleValues().size() == 0) { //Checks if there are no more possible values
+						if (sudoku.hasPreviousCell(r, c)) { //Checks if there is a previous cell
 							field.setText("");
 							field.setLocked(false);
 							r = sudoku.getPreviousRValue(r, c);
 							c = sudoku.getPreviousCValue(r, c);
 							numberFields[r][c].getPossibleValues().remove(0); //Removes the invalid possible value
-						}
-						else { //If there is no previous cell
+						} else { //If there is no previous cell
 							System.out.println("Failed to find results.");
 							return;
 						}
-					}
-					else { //If there is 1 or more possible values
+					} else { //If there is 1 or more possible values
 						field.setValue(field.getPossibleValues().get(0)); //Set the first value
-						if(sudoku.hasNextCell(r, c)) {
+						if (sudoku.hasNextCell(r, c)) {
 							r = sudoku.getNextRValue(r, c);
 							c = sudoku.getNextCValue(r, c);
+							System.out.println(""+r + c);
+						} else {
+							loopExit = 1;
+							System.out.println("" + r + " " + c);
 						}
 					}
+				}
+				printTree(field.getValue(), or, oc);//DEBUG
+			}
+	}
+
+	//---START OF DEBUG AND TESTING METHODS-----------------------------------------------
+	private void printTree(int value, int r, int c){//DEBUG METHOD
+		int spaces = r * 9 + c;
+		for(int i = 0; i <= spaces; i ++){
+			System.out.print(" ");
+		}
+		System.out.println(value);
+	}
+
+	private void tester() {
+		for(int c = 0; c < numberFields[0].length; c++) {
+			System.out.println("Testing Edge Case" + "(" + 0 + "," + c + ")" + " ...");
+			numberFields[0][c].setValue((int)(1+8*Math.random()));
+			checkPuzzle();
+			numberFields[0][c].setValue(0);
+		}
+
+		for(int r = 1; r < numberFields.length-1; r++) {
+			for (int c = 0; c < numberFields[r].length; c=numberFields[r].length-1){
+				System.out.println("Testing Edge Case" + "(" + 0 + "," + c + ")" + " ...");
+				numberFields[0][c].setValue((int) (1 + 8 * Math.random()));
+				checkPuzzle();
+				numberFields[0][c].setValue(0);
 			}
 		}
+
+		int testsCount = 0;
+		int maxTests = 35;
+		boolean[][] testerArray = new boolean[numberFields.length][numberFields[0].length];
+		for(int r = 0; r < testerArray.length; r++)
+			for(int c = 0; c < testerArray[r].length; c++)
+				testerArray[r][c] = true;
+
+		while(testsCount < maxTests) {
+			int r = (int)(Math.random()*(numberFields.length-2)+1);
+			int c = (int)(Math.random()*(numberFields.length-2)+1);
+			if(testerArray[r][c]) {
+				System.out.println("Testing Random Center Case" + "(" + 0 + "," + c + ")" + " ...");
+				numberFields[r][c].setValue((int) (1 + 8 * Math.random()));
+				checkPuzzle();
+				numberFields[r][c].setValue(0);
+			}
+			testerArray[r][c] = false;
+			testsCount++;
+		}
+	}
+
+	private void checkPuzzle() {
+		for (int r = 0; r < numberFields.length; r++)
+			for (int c = 0; c < numberFields[r].length; c++) {
+				if (!sudoku.isInBounds(r, c))
+					System.out.println("FAILED");
+			}
 	}
 }
