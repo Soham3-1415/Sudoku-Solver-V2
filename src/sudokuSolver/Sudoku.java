@@ -62,7 +62,7 @@ public class Sudoku {
 	}
 
 	public boolean hasNextCell(int r, int c) {
-		if(getNextRValue(r, c) == r && getNextCValue(r, c) == c){return false;}
+		if(r >= numberFields.length -1 && c >= numberFields[r].length -1){return false;}
 		return true;
 	}
 	

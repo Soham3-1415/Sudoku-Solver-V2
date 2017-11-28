@@ -27,3 +27,4 @@
 *.ini
 [Tt]humbs.db
 *.DS_Store
+/bin1/

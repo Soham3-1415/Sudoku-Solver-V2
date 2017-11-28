@@ -115,6 +115,7 @@ public class Main extends Application {
 		//Might need to implement concurrency
 		for(int r = 0; r < numberFields.length; r++)
 			for(int c = 0; c < numberFields[r].length; c++) {
+				
 				NumberField field = numberFields[r][c];
 				field.getPossibleValues().clear();
 				if(!field.getText().equals("")) {
@@ -161,8 +162,11 @@ public class Main extends Application {
 							return;
 						}
 					} else { //If there is 1 or more possible values
-						field.setValue(field.getPossibleValues().get(0)); //Set the first value
+						field.setValue(field.getPossibleValues().get(0));
+						System.out.println(sudoku.getNextRValue(r, c) + " " + sudoku.getNextCValue(r, c));
+						//Set the first value
 						if (sudoku.hasNextCell(r, c)) {
+							
 							r = sudoku.getNextRValue(r, c);
 							c = sudoku.getNextCValue(r, c);
 						} else {
@@ -170,7 +174,7 @@ public class Main extends Application {
 						}
 					}
 				}
-				printTree(field.getValue(), or, oc);//DEBUG
+				//printTree(field.getValue(), or, oc);//DEBUG
 			}
 	}
 
