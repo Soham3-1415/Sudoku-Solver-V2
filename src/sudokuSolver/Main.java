@@ -138,48 +138,43 @@ public class Main extends Application {
 			r1 = sudoku.getNextRValue(0,0);
 			c1 = sudoku.getNextCValue(0,0);
 		}
+do {
+		for(int r = 0; r < numberFields.length; r++)
+			for (int c =0; c < numberFields[r].length; c++) {
 
-		int loopExit = 0;
-		for(int r = r1; r < numberFields.length; r+=loopExit)
-			for (int c = c1; c < numberFields[r].length; c+=loopExit) {
-				int or = r;//DEBUG
-				int oc = c;//DEBUG
 				NumberField field = numberFields[r][c];
 				if (!field.getId().equals(originalString)) { //Checks if cell is an inputed value
 					if (!field.isLocked()) { //Only sets the possible values if the field is not locked
-						sudoku.setPossibleValues(r, c);
-						field.setLocked(true);
+						{
+							int rand = (int)(9* Math.random());
+							field.setValue(rand);
+							field.setLocked(true);
+						}
 					}
-					if (field.getPossibleValues().size() == 0) { //Checks if there are no more possible values
-						if (sudoku.hasPreviousCell(r, c)) { //Checks if there is a previous cell
-							field.setText("");
-							field.setLocked(false);
-							r = sudoku.getPreviousRValue(r, c);
-							c = sudoku.getPreviousCValue(r, c);
-							numberFields[r][c].getPossibleValues().remove(0); //Removes the invalid possible value
-						} else { //If there is no previous cell
-							System.out.println("Failed to find results.");
-							return;
-						}
-					} else { //If there is 1 or more possible values
-						field.setValue(field.getPossibleValues().get(0));
-						System.out.println(sudoku.getNextRValue(r, c) + " " + sudoku.getNextCValue(r, c));
-						//Set the first value
-						if (sudoku.hasNextCell(r, c)) {
-							
-							r = sudoku.getNextRValue(r, c);
-							c = sudoku.getNextCValue(r, c);
-						} else {
-							loopExit = 1;
-						}
 					}
 				}
 				//printTree(field.getValue(), or, oc);//DEBUG
+		for(int r = 0; r < numberFields.length; r++)
+			for(int c = 0; c < numberFields[r].length; c++)
+			{
+				if(!(sudoku.isUsable(numberFields[r][c].getValue(), r, c)))
+					numberFields[r][c].setLocked(false);
+		
 			}
+	} while(checkTree());	
 	}
 
+	private boolean checkTree()
+	{
+		for(int r = 0;  r< numberFields.length; r++)
+			for(int c = 0; c < numberFields[r].length; c++)
+				if(!(sudoku.isUsable(numberFields[r][c].getValue(), r, c)))
+					return false;
+		return true;
+					
+	}
 	//---START OF DEBUG AND TESTING METHODS-----------------------------------------------
-	private void printTree(int value, int r, int c){//DEBUG METHOD
+	/*private void printTree(int value, int r, int c){//DEBUG METHOD
 		int spaces = r * 9 + c;
 		for(int i = 0; i <= spaces; i ++){
 			System.out.print(" ");
@@ -230,6 +225,6 @@ public class Main extends Application {
 			for (int c = 0; c < numberFields[r].length; c++) {
 				if (!sudoku.isInBounds(r, c))
 					System.out.println("FAILED");
-			}
-	}
+			} 
+	}*/
 }
