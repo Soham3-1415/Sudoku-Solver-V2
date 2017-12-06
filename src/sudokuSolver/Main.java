@@ -138,30 +138,40 @@ public class Main extends Application {
 			r1 = sudoku.getNextRValue(0,0);
 			c1 = sudoku.getNextCValue(0,0);
 		}
-do {
+		do {
 		for(int r = 0; r < numberFields.length; r++)
-			for (int c =0; c < numberFields[r].length; c++) {
-
+			for (int c = 0; c < numberFields[r].length; c++) {
 				NumberField field = numberFields[r][c];
 				if (!field.getId().equals(originalString)) { //Checks if cell is an inputed value
 					if (!field.isLocked()) { //Only sets the possible values if the field is not locked
 						{
-							int rand = (int)(9* Math.random());
-							field.setValue(rand);
-							field.setLocked(true);
+							sudoku.setPossibleValues(r, c);
+							{
+								do 
+								{
+									if(field.getPossibleValues().size() != 0)
+									{	
+										int rand = (int)((field.getPossibleValues().size()) * Math.random());
+										field.setValue(field.getPossibleValues().get(rand));
+										field.setLocked(true);
+										System.out.println(rand);
+										if(!(sudoku.isUsable(numberFields[r][c].getValue(), r, c)))
+										{
+											numberFields[r][c].setLocked(false);
+											field.getPossibleValues().remove(rand);
+										}	
+									}
+								} while(field.getPossibleValues().size() > 0);
+							}
 						}
 					}
-					}
 				}
-				//printTree(field.getValue(), or, oc);//DEBUG
-		for(int r = 0; r < numberFields.length; r++)
-			for(int c = 0; c < numberFields[r].length; c++)
-			{
-				if(!(sudoku.isUsable(numberFields[r][c].getValue(), r, c)))
-					numberFields[r][c].setLocked(false);
-		
+			if(r == 8 && c == 8)
+				break;
 			}
+		
 	} while(checkTree());	
+	
 	}
 
 	private boolean checkTree()
