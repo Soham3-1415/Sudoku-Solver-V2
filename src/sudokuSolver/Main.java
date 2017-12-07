@@ -57,6 +57,21 @@ public class Main extends Application {
 		root.getChildren().clear();
 		root.getChildren().addAll(titleLbl, numberFieldGrid, progressBar, solveBtn);
 		solveBtn.setOnAction(new EventHandler<ActionEvent>() {@Override public void handle(ActionEvent e) {solveBtnClick();}});
+		
+		//DEBUG
+		int[][] edgeTest = {{1,2,3,4,5,6,7,8,9},
+							{8,0,0,0,0,0,0,0,2},
+							{7,0,0,0,0,0,0,0,3},
+							{6,0,0,0,0,0,0,0,5},
+							{5,0,0,0,0,0,0,0,4},
+							{4,0,0,0,0,0,0,0,6},
+							{3,0,0,0,0,0,0,0,7},
+							{2,0,0,0,0,0,0,0,8},
+							{9,8,7,6,4,5,3,2,1}};
+		for(int r=0;r<edgeTest.length;r++)
+			for(int c=0;c<edgeTest[r].length;c++)
+				numberFields[r][c].setValue(edgeTest[r][c]);
+		solveBtnClick();
 	}
 	
 	public static void main(String[] args) {
@@ -137,10 +152,11 @@ public class Main extends Application {
 			r1 = sudoku.getNextRValue(0,0);
 			c1 = sudoku.getNextCValue(0,0);
 		}
-
-		int loopExit = 0;
-		for(int r = r1; r < numberFields.length; r+=loopExit)
-			for (int c = c1; c < numberFields[r].length; c+=loopExit) {
+		
+		for(int r = r1; r < numberFields.length;)
+			for (int c = c1; c < numberFields[r].length;) {
+				r1 = 0;
+				c1 = 0;
 				int or = r;//DEBUG
 				int oc = c;//DEBUG
 				NumberField field = numberFields[r][c];
@@ -165,13 +181,12 @@ public class Main extends Application {
 						if (sudoku.hasNextCell(r, c)) {
 							r = sudoku.getNextRValue(r, c);
 							c = sudoku.getNextCValue(r, c);
-						} else {
-							loopExit = 1;
-						}
+						} else
+							return;
 					}
 				}
-				printTree(field.getValue(), or, oc);//DEBUG
-			}
+				//printTree(field.getValue(), or, oc);//DEBUG
+		}
 	}
 
 	//---START OF DEBUG AND TESTING METHODS-----------------------------------------------

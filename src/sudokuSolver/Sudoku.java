@@ -29,26 +29,24 @@ public class Sudoku {
 
 	private int[] traverseForward(int r, int c) {
 		int [] originalPosition = {r,c};
-		if(!isInBounds(r,c)) {
+		if(!isInBounds(r,c))
 			return originalPosition;
-		}
 		do {
 			c++;
 			if(c >= numberFields[r].length) {
 				r++;
 				c = 0;
 			}
-			if(!isInBounds(r, c))
-				return originalPosition;
+			if(!isInBounds(r, c)) {
+				return originalPosition;}
 		} while(numberFields[r][c].getId() == originalString);
 		return new int[]{r, c};
 	}
 
 	private int[] traverseBackward(int r, int c) {
 		int [] originalPosition = {r,c};
-		if(!isInBounds(r,c)) {
+		if(!isInBounds(r,c))
 			return originalPosition;
-		}
 		do {
 			c--;
 			if(c <= 0) {
