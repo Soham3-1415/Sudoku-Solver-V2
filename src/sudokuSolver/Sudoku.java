@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Sudoku {
 
-	private NumberField[][] numberFields = new NumberField[9][9];
+	private NumberField[][] numberFields;
 	private final String originalString;
 	
 	public Sudoku (NumberField[][] numberFields, String originalString) {
@@ -12,19 +12,16 @@ public class Sudoku {
 		this.originalString = originalString;
 	}
 	
-	public ArrayList<Integer> setPossibleValues(int r, int c) {
+	public void setPossibleValues(int r, int c) {
 		ArrayList<Integer> possibleValues = new ArrayList<Integer>();
 		for(int i = 1; i <= 9; i++)
 			if(isUsable(i, r, c))
 				possibleValues.add(i);
 		numberFields[r][c].setPossibleValues(possibleValues);
-		return possibleValues ;
 	}
 	
 	public boolean isInBounds(int r, int c) {
-		if(!(r >= 0 && r < numberFields.length && c >= 0 && c < numberFields[r].length))
-			return false;
-		return true;
+		return (r >= 0 && r < numberFields.length && c >= 0 && c < numberFields[r].length);
 	}
 
 	private int[] traverseForward(int r, int c) {
@@ -43,22 +40,6 @@ public class Sudoku {
 		return new int[]{r, c};
 	}
 
-	private int[] traverseBackward(int r, int c) {
-		int [] originalPosition = {r,c};
-		if(!isInBounds(r,c))
-			return originalPosition;
-		do {
-			c--;
-			if(c <= 0) {
-				r--;
-				c = numberFields[r].length-1;
-			}
-			if(!isInBounds(r, c))
-				return originalPosition;
-		} while(numberFields[r][c].getId() == originalString);
-		return new int[]{r, c};
-	}
-
 	public boolean hasNextCell(int r, int c) {
 		if(getNextRValue(r, c) == r && getNextCValue(r, c) == c){return false;}
 		return true;
@@ -70,20 +51,6 @@ public class Sudoku {
 	
 	public int getNextCValue(int r, int c) {
 		return traverseForward(r,c)[1];
-	}
-	
-	public boolean hasPreviousCell(int r, int c) {
-		if(getPreviousRValue(r, c) == r && getPreviousCValue(r, c) == c)
-			return false;
-		return true;
-	}
-	
-	public int getPreviousRValue(int r, int c) {
-		return traverseBackward(r,c)[0];
-	}
-	
-	public int getPreviousCValue(int r, int c) {
-		return traverseBackward(r,c)[1];
 	}
 	
 	public boolean isUsable (int value, int r, int c) {
@@ -123,10 +90,6 @@ public class Sudoku {
 		return false;
 	}
 	
-	public NumberField[][] getSection(int r, int c) {
-		return getSection(getSectionNumber(r, c));
-	}
-	
 	public NumberField[][] getSection(int section) {
 		NumberField[][] numberFieldsSection = new NumberField[3][3];
 		int startRowPos = ((section-1)/3)*3;
@@ -156,6 +119,7 @@ public class Sudoku {
 			}
 	}
 
+	@Override
 	public String toString() {
 		String output = "";
 		for(NumberField[] row : numberFields) {

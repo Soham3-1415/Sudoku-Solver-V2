@@ -1,12 +1,11 @@
 package sudokuSolver;
 
-import java.util.ArrayList;
-
 import com.jfoenix.controls.JFXTextField;
+
+import java.util.ArrayList;
 
 public class NumberField extends JFXTextField {
 	private ArrayList<Integer> possibleValues = new ArrayList<Integer>();
-	private boolean locked = false;
 
 	public NumberField() {
 		super();
@@ -14,23 +13,6 @@ public class NumberField extends JFXTextField {
 
 	public NumberField(String text) {
 		super(text);
-	}
-	
-	public NumberField(ArrayList<Integer> possibleValues) {
-		setPossibleValues(possibleValues);
-	}
-	
-	public NumberField(String text, ArrayList<Integer> possibleValues) {
-		this(text);
-		setPossibleValues(possibleValues);
-	}
-	
-	public void setLocked(boolean locked) {
-		this.locked = locked;
-	}
-	
-	public boolean isLocked() {
-		return locked;
 	}
 	
 	public void setPossibleValues(ArrayList<Integer> possibleValues) {
