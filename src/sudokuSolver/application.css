@@ -12,10 +12,11 @@
 	-fx-highlight-fill: null;
 	-fx-highlight-text-fill: null;
 	-fx-padding: 10;
+	-fx-display-caret: false;
 }
 
 #original {
-	-fx-text-fill: #000000;
+	-fx-text-fill: #9d0006;
 	-fx-font-weight: bold;
 }
 
@@ -30,7 +31,12 @@
 }
 
 .root {
-	-fx-alignment: center ;
+	-fx-alignment: center;
+}
+
+.h-box {
+	-fx-alignment: center;
+	-fx-font-size: 15pt;
 }
 
 .jfx-progress-bar > .track, .jfx-progress-bar > .bar {

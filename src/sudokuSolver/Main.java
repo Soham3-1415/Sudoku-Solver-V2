@@ -13,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -22,11 +23,13 @@ public class Main extends Application {
 	private Sudoku sudoku;
 	private final String originalString = "original";
 	private boolean solved = false;
+	private boolean entryLocked = false;
 
 	private Label titleLbl = new Label("Sudoku Solver V2");
 	private GridPane numberFieldGrid = new GridPane();
-	private JFXProgressBar progressBar = new JFXProgressBar();
+	private HBox buttonsBox = new HBox(5);
 	private JFXButton solveBtn = new JFXButton("Solve");
+	private JFXButton clearBtn = new JFXButton("Clear");
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -36,7 +39,7 @@ public class Main extends Application {
 			for (int c = 0; c < 9; c++)
 				numberFields[r][c] = new NumberField();
 
-		VBox root = new VBox();
+		VBox root = new VBox(20);
 		Scene scene = new Scene(root, 900, 900);
 		scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 		primaryStage.setScene(scene);
@@ -47,12 +50,22 @@ public class Main extends Application {
 		primaryStage.show();
 		numberFieldGrid = createNumberFieldGrid();
 
+		buttonsBox.getStyleClass().setAll("h-box", "box");
+		buttonsBox.getChildren().clear();;
+		buttonsBox.getChildren().addAll(solveBtn, clearBtn);
+
 		root.getChildren().clear();
-		root.getChildren().addAll(titleLbl, numberFieldGrid, progressBar, solveBtn);
+		root.getChildren().addAll(titleLbl, numberFieldGrid, buttonsBox);
 		solveBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
 				solveBtnClick();
+			}
+		});
+		clearBtn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				clearBtnClick();
 			}
 		});
 	}
@@ -61,6 +74,13 @@ public class Main extends Application {
 		launch(args);
 	}
 
+	private void setEntryLocked(boolean entryLocked) {
+		this.entryLocked = entryLocked;
+		for(NumberField[] fieldRow:numberFields)
+			for(NumberField field:fieldRow)
+				field.setEditable(!entryLocked);
+	}
+	
 	private GridPane createNumberFieldGrid() {
 		GridPane numberFieldGrid = new GridPane();
 		for (int r = 0; r < numberFields.length; r++)
@@ -70,7 +90,8 @@ public class Main extends Application {
 				numberField.textProperty().addListener(new ChangeListener<String>() {
 					@Override
 					public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-						numberFieldRegulation(observable, oldValue, newValue, numberField);
+						if(!entryLocked)
+							numberFieldRegulation(observable, oldValue, newValue, numberField);
 					}
 				});
 
@@ -135,18 +156,20 @@ public class Main extends Application {
 			r = sudoku.getNextRValue(0, 0);
 			c = sudoku.getNextCValue(0, 0);
 		}
-		recurse(r, c);
+		setEntryLocked(true);
+		evaluateCell(r, c);
+		setEntryLocked(false);
 		solved = false;
 	}
 
-	private void recurse(int r, int c) {//Clean up Sudoku class and numberField class with unused methods and instance variables
+	private void evaluateCell(int r, int c) {//Clean up Sudoku class and numberField class with unused methods and instance variables
 		sudoku.setPossibleValues(r, c);
 		if (numberFields[r][c].getPossibleValues().size() == 0)
 			return;
 		for (int value : numberFields[r][c].getPossibleValues()) {
 			numberFields[r][c].setValue(value);
 			if (sudoku.hasNextCell(r, c)) {
-				recurse(sudoku.getNextRValue(r, c), sudoku.getNextCValue(r, c));
+				evaluateCell(sudoku.getNextRValue(r, c), sudoku.getNextCValue(r, c));
 				if (solved)
 					return;
 				numberFields[sudoku.getNextRValue(r, c)][sudoku.getNextCValue(r, c)].getPossibleValues().clear();
@@ -156,5 +179,9 @@ public class Main extends Application {
 				return;
 			}
 		}
+	}
+
+	private void clearBtnClick() {
+		sudoku.clearSudoku();
 	}
 }
