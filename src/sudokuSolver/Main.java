@@ -145,19 +145,19 @@ public class Main extends Application {
 			c = sudoku.getNextCValue(0, 0);
 		}
 		setEntryLocked(true);
-		recurse(r, c);
+		evaluateCell(r, c);
 		setEntryLocked(false);
 		solved = false;
 	}
 
-	private void recurse(int r, int c) {//Clean up Sudoku class and numberField class with unused methods and instance variables
+	private void evaluateCell(int r, int c) {//Clean up Sudoku class and numberField class with unused methods and instance variables
 		sudoku.setPossibleValues(r, c);
 		if (numberFields[r][c].getPossibleValues().size() == 0)
 			return;
 		for (int value : numberFields[r][c].getPossibleValues()) {
 			numberFields[r][c].setValue(value);
 			if (sudoku.hasNextCell(r, c)) {
-				recurse(sudoku.getNextRValue(r, c), sudoku.getNextCValue(r, c));
+				evaluateCell(sudoku.getNextRValue(r, c), sudoku.getNextCValue(r, c));
 				if (solved)
 					return;
 				numberFields[sudoku.getNextRValue(r, c)][sudoku.getNextCValue(r, c)].getPossibleValues().clear();
