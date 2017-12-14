@@ -13,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -26,8 +27,9 @@ public class Main extends Application {
 
 	private Label titleLbl = new Label("Sudoku Solver V2");
 	private GridPane numberFieldGrid = new GridPane();
-	private JFXProgressBar progressBar = new JFXProgressBar();
+	private HBox buttonsBox = new HBox(5);
 	private JFXButton solveBtn = new JFXButton("Solve");
+	private JFXButton clearBtn = new JFXButton("Clear");
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -37,7 +39,7 @@ public class Main extends Application {
 			for (int c = 0; c < 9; c++)
 				numberFields[r][c] = new NumberField();
 
-		VBox root = new VBox();
+		VBox root = new VBox(20);
 		Scene scene = new Scene(root, 900, 900);
 		scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 		primaryStage.setScene(scene);
@@ -48,12 +50,22 @@ public class Main extends Application {
 		primaryStage.show();
 		numberFieldGrid = createNumberFieldGrid();
 
+		buttonsBox.getStyleClass().setAll("h-box", "box");
+		buttonsBox.getChildren().clear();;
+		buttonsBox.getChildren().addAll(solveBtn, clearBtn);
+
 		root.getChildren().clear();
-		root.getChildren().addAll(titleLbl, numberFieldGrid, progressBar, solveBtn);
+		root.getChildren().addAll(titleLbl, numberFieldGrid, buttonsBox);
 		solveBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
 				solveBtnClick();
+			}
+		});
+		clearBtn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				clearBtnClick();
 			}
 		});
 	}
@@ -167,5 +179,9 @@ public class Main extends Application {
 				return;
 			}
 		}
+	}
+
+	private void clearBtnClick() {
+		sudoku.clearSudoku();
 	}
 }
