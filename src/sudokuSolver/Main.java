@@ -27,9 +27,10 @@ public class Main extends Application {
 
 	private Label titleLbl = new Label("Sudoku Solver V2");
 	private GridPane numberFieldGrid = new GridPane();
-	private HBox buttonsBox = new HBox(5);
+	private HBox buttonsBox = new HBox(10);
 	private JFXButton solveBtn = new JFXButton("Solve");
 	private JFXButton clearBtn = new JFXButton("Clear");
+	private Label infoLbl = new Label("");
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -39,7 +40,7 @@ public class Main extends Application {
 			for (int c = 0; c < 9; c++)
 				numberFields[r][c] = new NumberField();
 
-		VBox root = new VBox(20);
+		VBox root = new VBox(25);
 		Scene scene = new Scene(root, 900, 900);
 		scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 		primaryStage.setScene(scene);
@@ -54,14 +55,20 @@ public class Main extends Application {
 		buttonsBox.getChildren().clear();;
 		buttonsBox.getChildren().addAll(solveBtn, clearBtn);
 
+		titleLbl.setId("title");
+		infoLbl.setId("info");
+		
 		root.getChildren().clear();
-		root.getChildren().addAll(titleLbl, numberFieldGrid, buttonsBox);
+		root.getChildren().addAll(titleLbl, numberFieldGrid, buttonsBox, infoLbl);
+		
+		solveBtn.setId("solve");
 		solveBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
 				solveBtnClick();
 			}
 		});
+		clearBtn.setId("clear");
 		clearBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
@@ -102,7 +109,6 @@ public class Main extends Application {
 	}
 
 	private void numberFieldRegulation(ObservableValue<? extends String> observable, String oldValue, String newValue, NumberField numberField) {
-		//System.out.println(newValue +"\n"+ oldValue+"\n");
 		if (newValue.matches("\\d{1}") && newValue.indexOf("0") == -1) {
 			if (oldValue.matches("\\d{1}") && oldValue.indexOf("0") == -1)
 				return;
@@ -130,7 +136,6 @@ public class Main extends Application {
 
 	private void solveBtnClick() {
 		solved = false;
-		//Might need to implement concurrency
 		for (int r = 0; r < numberFields.length; r++)
 			for (int c = 0; c < numberFields[r].length; c++) {
 				NumberField field = numberFields[r][c];
@@ -143,6 +148,7 @@ public class Main extends Application {
 						field.setText("" + temp);
 						sudoku.clearSudokuIds();
 						System.out.println("The sudoku is unsolvable.");
+						infoLbl.setText("Error: invalid sudoku");
 						return;
 					}
 					field.setText("" + temp);
@@ -156,13 +162,17 @@ public class Main extends Application {
 			r = sudoku.getNextRValue(0, 0);
 			c = sudoku.getNextCValue(0, 0);
 		}
+		double start = System.currentTimeMillis() / 1000.0;
 		setEntryLocked(true);
 		evaluateCell(r, c);
 		setEntryLocked(false);
+		double end = System.currentTimeMillis() / 1000.0;
+		double time = end - start;
+		infoLbl.setText("Solving duration: " + String.format("%.5f", time) + " seconds");
 		solved = false;
 	}
 
-	private void evaluateCell(int r, int c) {//Clean up Sudoku class and numberField class with unused methods and instance variables
+	private void evaluateCell(int r, int c) {
 		sudoku.setPossibleValues(r, c);
 		if (numberFields[r][c].getPossibleValues().size() == 0)
 			return;
@@ -183,5 +193,6 @@ public class Main extends Application {
 
 	private void clearBtnClick() {
 		sudoku.clearSudoku();
+		infoLbl.setText("");
 	}
 }

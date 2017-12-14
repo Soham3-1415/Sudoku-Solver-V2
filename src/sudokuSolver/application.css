@@ -20,16 +20,28 @@
 	-fx-font-weight: bold;
 }
 
-.label {
+#title {
 	-fx-font-size: 30pt;
-	-fx--alignment: center;
+	-fx-alignment: center;
+}
+
+#info {
+	-fx-font-size: 20pt;
+	-fx-alignment: center;
 }
 
 .jfx-button {
 	-fx-alignment: center;
-	-jfx-button-type: RAISED;
+	-jfx-button-type: FLAT;
 }
 
+#solve {
+	-fx-background-color: #009688;
+}
+
+#clear {
+	-fx-background-color: #f44336;
+}
 .root {
 	-fx-alignment: center;
 }
