@@ -22,6 +22,7 @@ public class Main extends Application {
 	private Sudoku sudoku;
 	private final String originalString = "original";
 	private boolean solved = false;
+	private boolean entryLocked = false;
 
 	private Label titleLbl = new Label("Sudoku Solver V2");
 	private GridPane numberFieldGrid = new GridPane();
@@ -61,6 +62,13 @@ public class Main extends Application {
 		launch(args);
 	}
 
+	private void setEntryLocked(boolean entryLocked) {
+		this.entryLocked = entryLocked;
+		for(NumberField[] fieldRow:numberFields)
+			for(NumberField field:fieldRow)
+				field.setEditable(!entryLocked);
+	}
+	
 	private GridPane createNumberFieldGrid() {
 		GridPane numberFieldGrid = new GridPane();
 		for (int r = 0; r < numberFields.length; r++)
@@ -70,7 +78,8 @@ public class Main extends Application {
 				numberField.textProperty().addListener(new ChangeListener<String>() {
 					@Override
 					public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-						numberFieldRegulation(observable, oldValue, newValue, numberField);
+						if(!entryLocked)
+							numberFieldRegulation(observable, oldValue, newValue, numberField);
 					}
 				});
 
@@ -135,7 +144,9 @@ public class Main extends Application {
 			r = sudoku.getNextRValue(0, 0);
 			c = sudoku.getNextCValue(0, 0);
 		}
+		setEntryLocked(true);
 		recurse(r, c);
+		setEntryLocked(false);
 		solved = false;
 	}
 
