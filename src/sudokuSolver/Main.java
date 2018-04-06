@@ -52,7 +52,7 @@ public class Main extends Application {
 		numberFieldGrid = createNumberFieldGrid();
 
 		buttonsBox.getStyleClass().setAll("h-box", "box");
-		buttonsBox.getChildren().clear();;
+		buttonsBox.getChildren().clear();
 		buttonsBox.getChildren().addAll(solveBtn, clearBtn);
 
 		titleLbl.setId("title");
